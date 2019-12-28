@@ -7,35 +7,50 @@
 # The pokemon image files are labelled with numbers, that is used to filter out unwanted images
 import os
 
-def filter_irrelevant_img(path,poke_digi):
+def filter_poke_imgs(path):
+
+    print("Filtering pokemon images ...")
     
     names = os.listdir(path)
     not_relevant = []
 
-    # If poke_digi == 0, it means the path is for pokemon images
-    if poke_digi == 0:
-    	for file_name in names:
-            check = file_name[:-4]
-            try:
-                int(check)
-            except ValueError:
-                not_relevant += [file_name]
-    # If poke_digi == 1, it means the path is for digimon images
-    else:
-    	for file_name in names:
-            if "mon" not in file_name:
-                not_relevant += [file_name]
+    for file_name in names:
+        check = file_name[:-4]
+        try:
+            int(check)
+        except ValueError:
+            not_relevant += [file_name]
 
     # Delete these files
     for file_name in not_relevant:
         full_path = path + "\\" + file_name
         os.remove(full_path)
 
+    print("Images filtered successfully ...")
+
+def filter_digi_imgs(path):
+    
+    print("Filtering digimon images ...")
+
+    names = os.listdir(path)
+    not_relevant = []
+
+    for file_name in names:
+        if "mon" not in file_name:
+            not_relevant += [file_name]
+
+    # Delete these files
+    for file_name in not_relevant:
+        full_path = path + "\\" + file_name
+        os.remove(full_path)
+
+    print("Images filtered successfully ...")
+
 def main():
-    poke_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\pokemon_images"
-    filter_irrelevant_img(poke_path,0)
-    digi_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\digimon_images"
-    filter_irrelevant_img(digi_path,1)
+    poke_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_images"
+    filter_poke_imgs(poke_path)
+    digi_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_images"
+    filter_digi_imgs(digi_path)
 
 if __name__ == "__main__":
 	main()
