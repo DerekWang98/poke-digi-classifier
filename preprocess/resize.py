@@ -18,11 +18,19 @@ def main():
     
     width = 215
     height = 215
+
+    poke_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_png"
+    poke_save_resized = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_png_resized"
     digi_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_png"
     digi_save_resized = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_png_resized"
+
+    poke_filenames = os.listdir(poke_path)
     digi_filenames = os.listdir(digi_path)
 
     print("Resizing images ...")
+
+    for name in poke_filenames:
+        resize_img(poke_path+"\\"+name, poke_save_resized+"\\"+name, width, height)
 
     for name in digi_filenames:
         resize_img(digi_path+"\\"+name, digi_save_resized+"\\"+name, width, height)
