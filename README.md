@@ -1,6 +1,6 @@
 # What is this project?
 I've been learning a great deal of machine learning in my summer research scholarship at the Westmead Institute of Medical Research (WIMR) where I'm developing a radiomics tool for clinicians. In short, it's an application that will utilise machine learning to predict certain clinical outcome such as whether cancer will spread after treatment or is a tissue cancerous or benign. These predictions hopefully will help doctors by providing additional insights using past CT data.
-I want to consolidate my learnings with a fun personal project and what better way than to make a Pokemon and Digimon classifier. When I have kids, I would want them to be able to know the difference between Pokemons or Digimons. (Digimons are clearly way cooler)
+I want to consolidate my learnings with a fun personal project and what better way than to make a Pokemon and Digimon classifier. When I have kids, I would want them to be able to know the difference between Pokemons or Digimons. (Pokemons are clearly more diverse and interesting)
 
 TL;DR I wanted a fun project to summarise what I've learnt so far in my summer research scholarship.
 
