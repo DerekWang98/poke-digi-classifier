@@ -10,19 +10,19 @@ def resize_img(img_dir,save_dir,width,height):
 
     fd_img = open(img_dir,'r+b')
     img = Image.open(fd_img)
-    img = resizeimage.resize_contain(img, [215, 215])
+    img = resizeimage.resize_contain(img, [width, height])
     img.save(save_dir, img.format)
     fd_img.close()
 
 def main():
     
-    width = 215
-    height = 215
+    width = 40
+    height = 40
 
     poke_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_png"
-    poke_save_resized = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_png_resized"
+    poke_save_resized = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_png_small"
     digi_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_png"
-    digi_save_resized = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_png_resized"
+    digi_save_resized = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_png_small"
 
     poke_filenames = os.listdir(poke_path)
     digi_filenames = os.listdir(digi_path)

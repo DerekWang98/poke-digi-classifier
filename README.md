@@ -9,10 +9,13 @@ I downloaded the image of every Digimon from https://wikimon.net/Visual_List_of_
 
 # What did I do (in summary)?
 I made sure to filter out useless images such as logos/banners that might have been in the website since the chrome extensions downloads all images on a website. Converted them into PNG so that a python package, resizeimage, will be able to make them into a consistent pixel size (I chose 215 x 215 pixels since most pokemon images was that size). Converted them into numbers into a numpy array, did some feature scaling and shoved them up a logistic regression model with ridge regularisation. 
-
 It ended up having an accuracy of 0.8 and an AUC of 0.878 on the validation set (AUC close to 1 is good and it's bad when it's around 0.5).
+
+
+I then performed a grid search and found that the large datasets will take a long time so I made the images smaller into 40 x 40 pixels. The grid search returned values of penalty = 'l2' and C= 0.0020235896477251557.
+This result in an accuracy of 0.8 and AUC of 0.877 which did not really improve on the model.
 
 # What I've learnt and future steps?
 This was great because it helped me familiarise myself with machine learning packages such as scikitlearn and also how to deal with image data.
 
-Logistic regression worked better than I thought but I wanna be the best, Like no one ever was. So, I'll be doing a grid search and also trying out Random Forest classifiers to improve the machine learning model (and of course make sure it works well for the test set).
+Logistic regression worked better than I thought but I wanna be the best, Like no one ever was. I'll have to try more complex models than this to improve the prediction.
