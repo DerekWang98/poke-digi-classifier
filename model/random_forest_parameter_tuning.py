@@ -1,14 +1,12 @@
-# Use logistic_regression and regularisation
-
+# Logistic Regression performed quite well but perhaps random forest will perform much better
 # Upload the pokemon and digimon images
-import os
 import sys
-from PIL import Image
+import os
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn import metrics
 import matplotlib.pyplot as plt
+from PIL import Image
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
@@ -19,10 +17,10 @@ def read_img_data(img_path,X,j):
 	filenames = os.listdir(img_path)
 	print("Uploading Images ...")
 	for i in range(len(filenames)):
-		file = filenames[i]
-		image = Image.open(img_path+"\\"+file).convert("RGB")
-		data = np.asarray(image).flatten()
-		X[i+j,:] = data
+	    file = filenames[i]
+	    image = Image.open(img_path+"\\"+file).convert("RGB")
+	    data = np.asarray(image).flatten()
+	    X[i+j,:] = data
 
 	print("Images successfully uploaded!")
 
@@ -53,20 +51,38 @@ def create_X_y(poke_path,digi_path):
 
 	return X,y
 
-def logistic_reg(X,y):
-	# Predict images using logistic regression
-	# Standardise the dataset
+def random_forest_hyperparameter(X,y):
+	# Returns the parameters that obtains the best result for random forest
+	# Standardising the X dataset
 	X = preprocessing.scale(X)
 
 	# Split the dataset into training, test and validation set.
 	X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=1)
 	X_train,X_val,y_train,y_val= train_test_split(X_train,y_train,test_size=0.2,random_state=1)
 
-	# Train the model with logistic regression and finds the optimal parameters
-	print("\nTraining the model ...")
+	# Train the model with logistic regression
+	print("\nTraining the random forest model ...")
 
-	best_model = LogisticRegression(penalty="l2",C=0.0020235896477251557,max_iter=1000,random_state=1).fit(X_train,y_train)
+	hyperparameters = {'bootstrap': [True, False],
+	 'max_depth': [10, 50, 100],
+	 'max_features': ['auto', 'sqrt'],
+	 'min_samples_leaf': [10, 20, 40]}
+
+	model = RandomForestClassifier(random_state=1)
+	clf = GridSearchCV(model, hyperparameters, cv = 5, verbose=1)
+	best_model = clf.fit(X_train, y_train)
 	y_pred = best_model.predict(X_val)
+
+	print("Best parameters to use for random forest!")
+
+	# Display the best parameters obtained for random forest
+	print("bootstrap:",best_model.best_estimator_.get_params()["bootstrap"])
+	print("n_estimators:",best_model.best_estimator_.get_params()["n_estimators"])
+	print("max_depth:",best_model.best_estimator_.get_params()["max_depth"])
+	print("max_features:",best_model.best_estimator_.get_params()["max_features"])
+	print("min_samples_leaf:",best_model.best_estimator_.get_params()["min_samples_leaf"])
+
+	#print(best_model.get_params())
 
 	return y_val,y_pred,best_model,X_val
 
@@ -83,13 +99,9 @@ def results(y_val,y_pred,best_model,X_val):
 	print("Precision",pre)
 
 	y_pred_proba = best_model.predict_proba(X_val)[::,1]
-	fpr, tpr, _ = metrics.roc_curve(y_val,  y_pred_proba)
+	fpr, tpr, _ = metrics.roc_curve(y_val, y_pred_proba)
 	auc = metrics.roc_auc_score(y_val, y_pred_proba)
-	plt.plot(fpr,tpr,label="default auc="+str(auc))
-	plt.legend(loc=4)
 	print("AUC:",auc)
-	plt.show()
-
 
 def main():
 	if len(sys.argv)!=3:
@@ -103,7 +115,7 @@ def main():
 	X,y = create_X_y(poke_path,digi_path)
 
 	# Train the machine learning model and check its accuracy with a validation set
-	y_val,y_pred,best_model,X_val = logistic_reg(X,y)
+	y_val,y_pred,best_model,X_val = random_forest_hyperparameter(X,y)
 	results(y_val,y_pred,best_model,X_val)
 
 if __name__ == "__main__":

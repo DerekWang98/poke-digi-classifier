@@ -1,6 +1,7 @@
 # Logistic Regression performed quite well but perhaps random forest will perform much better
 # Upload the pokemon and digimon images
 import os
+import sys
 from PIL import Image
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -11,91 +12,96 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 
+def read_img_data(img_path,X,j):
+	# Reads the image data in img_path and starts placing the data in the X matrix
+	filenames = os.listdir(img_path)
+	print("Uploading Images ...")
+	for i in range(len(filenames)):
+	    file = filenames[i]
+	    image = Image.open(img_path+"\\"+file).convert("RGB")
+	    data = np.asarray(image).flatten()
+	    X[i+j,:] = data
 
-poke_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_png_small"
-digi_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\digimon_png_small"
+	print("Images successfully uploaded!")
 
-poke_filenames = os.listdir(poke_path)
-digi_filenames = os.listdir(digi_path)
+	return X,len(filenames)
 
-pixel_no = 40*40*3
-poke_img_no = 809
-digi_img_no = 1284
+def create_X_y(poke_path,digi_path):
+	# Create an empty x matrix where rows = no. of poke images+no. of digi images and cols = no. of pixels in each rgb layer
+	poke_filenames = os.listdir(poke_path)
+	digi_filenames = os.listdir(digi_path)
+
+	# Finding the dimensions of an image
+	test_img = Image.open(os.path.join(poke_path,poke_filenames[0]))
+	dims = np.shape(test_img)
+
+	pixel_no = dims[0]*dims[1]*3
+	poke_img_no = len(poke_filenames)
+	digi_img_no = len(digi_filenames)
+
+	X = np.zeros(shape=(poke_img_no+digi_img_no,pixel_no))
+	
+	# Read/upload data in to the matrix
+	X,j = read_img_data(poke_path,X,0)
+	X,j = read_img_data(digi_path,X,j)
+
+	# Pokemon = 0, and Digimon = 1
+	y = np.zeros(shape=(poke_img_no+digi_img_no,))
+	y[poke_img_no:] = np.ones((digi_img_no,))
+
+	return X,y
+
+def random_fores(X,y):
+	X = preprocessing.scale(X)
+
+	# Split the dataset into training, test and validation set.
+	X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=1)
+	X_train,X_val,y_train,y_val= train_test_split(X_train,y_train,test_size=0.2,random_state=1)
+
+	# Train the model with logistic regression
+	print("\nTraining the random forest model ...")
+
+	best_model = RandomForestClassifier(random_state=1).fit(X_train,y_train)
+	y_pred = best_model.predict(X_val)
+
+	return y_val,y_pred,best_model,X_val
 
 
-X = np.zeros(shape=(poke_img_no+digi_img_no,pixel_no))
+def results(y_val,y_pred,best_model,X_val):
+	# Returns the accuracy, recall and precision of the prediction
+	cnf_matrix = metrics.confusion_matrix(y_val, y_pred)
+	TP,FN,FP,TN = cnf_matrix[0,0],cnf_matrix[0,1],cnf_matrix[1,0],cnf_matrix[1,1]
 
-print("Uploading Pokemon Images ...")
-for i in range(len(poke_filenames)):
-    file_name = poke_filenames[i]
-    image = Image.open(poke_path+"\\"+file_name).convert("RGB")
-    data = np.asarray(image).flatten()
-    X[i,:] = data
+	acc = (TP+TN)/(TP+TN+FP+FN)
+	rec = TP/(TP+FN)
+	pre = TP/(TP+FP)
+	print("Accuracy:",acc)
+	print("Recall:",rec)
+	print("Precision",pre)
 
-print("Images successfully uploaded!")
+	y_pred_proba = best_model.predict_proba(X_val)[::,1]
+	fpr, tpr, _ = metrics.roc_curve(y_val,  y_pred_proba)
+	auc = metrics.roc_auc_score(y_val, y_pred_proba)
+	plt.plot(fpr,tpr,label="default auc="+str(auc))
+	plt.legend(loc=4)
+	print("AUC:",auc)
+	plt.show()
 
-print("Uploading Digimon Images ...")
-for i in range(len(digi_filenames)):
-    file_name = digi_filenames[i]
-    image = Image.open(digi_path+"\\"+file_name).convert("RGB")
-    data = np.asarray(image).flatten()
-    X[i+len(poke_filenames),:] = data
 
-print("Images successfully uploaded!")
+def main():
+	if len(sys.argv)!=3:
+		print("Warning: Incorrect Usage. Example: python random_forest_parameter_tuning.py poke_path digi_path")
+		return
 
-# Pokemon = 0, and Digimon = 1
-y = np.zeros(shape=(poke_img_no+digi_img_no,))
-y[poke_img_no:] = np.ones((digi_img_no,))
+	poke_path = sys.argv[1]
+	digi_path = sys.argv[2]
 
-X = preprocessing.scale(X)
+	# Uploading image data to create the X matrix
+	X,y = create_X_y(poke_path,digi_path)
 
-# Split the dataset into training, test and validation set.
-X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=1)
-X_train,X_val,y_train,y_val= train_test_split(X_train,y_train,test_size=0.2,random_state=1)
+	# Train the machine learning model and check its accuracy with a validation set
+	y_val,y_pred,best_model,X_val = random_fores(X,y)
+	results(y_val,y_pred,best_model,X_val)
 
-# Train the model with logistic regression
-print("Training the random forest model ... \n")
-
-# best_model = RandomForestClassifier(n_estimators=100,random_state=1).fit(X_train,y_train)
-# y_pred = best_model.predict(X_val)
-
-# hyperparameters = {'bootstrap': [True, False],
-#  'max_depth': [10, 50, 100],
-#  'max_features': ['auto', 'sqrt'],
-#  'min_samples_leaf': [10, 20, 40]}
-
-# hyperparameters = {"n_estimators":[100,1000,10000],'max_depth': [10, 100, 1000],'max_features': ['auto', 'sqrt'],'min_samples_leaf': [10, 100, 1000]}
-best_model = RandomForestClassifier(random_state=1).fit(X_train,y_train)
-y_pred = best_model.predict(X_val)
-
-# model = RandomForestClassifier(random_state=1)
-# clf = GridSearchCV(model, hyperparameters, cv = 5, verbose=1)
-# best_model = clf.fit(X_train, y_train)
-# y_pred = best_model.predict(X_val)
-
-# print("bootstrap:",best_model.best_model.best_estimator.get_params()["bootstrap"])
-# print("n_estimators:",best_model.best_estimator_.get_params()["n_estimators"])
-# print("max_depth:",best_model.best_estimator_.get_params()["max_depth"])
-# print("max_features:",best_model.best_estimator_.get_params()["max_features"])
-# print("min_samples_leaf:",best_model.best_estimator_.get_params()["min_samples_leaf"])
-
-# print(best_model.get_params())
-
-cnf_matrix = metrics.confusion_matrix(y_val, y_pred)
-TP,FN,FP,TN = cnf_matrix[0,0],cnf_matrix[0,1],cnf_matrix[1,0],cnf_matrix[1,1]
-
-acc = (TP+TN)/(TP+TN+FP+FN)
-rec = TP/(TP+FN)
-pre = TP/(TP+FP)
-print("Accuracy:",acc)
-print("Recall:",rec)
-print("Precision",pre)
-
-y_pred_proba = best_model.predict_proba(X_val)[::,1]
-fpr, tpr, _ = metrics.roc_curve(y_val,  y_pred_proba)
-auc = metrics.roc_auc_score(y_val, y_pred_proba)
-print("AUC:",auc)
-
-# plt.plot(fpr,tpr,label="default auc="+str(auc))
-# plt.legend(loc=4)
-# plt.show()
+if __name__ == "__main__":
+    main()
