@@ -39,7 +39,7 @@ for i in range(len(digi_filenames)):
     file_name = digi_filenames[i]
     image = Image.open(digi_path+"\\"+file_name).convert("RGB")
     data = np.asarray(image).flatten()
-    X[i,:] = data
+    X[i+len(poke_filenames),:] = data
 
 print("Images successfully uploaded!")
 
@@ -74,12 +74,12 @@ y_pred = best_model.predict(X_val)
 # y_pred = best_model.predict(X_val)
 
 # print("bootstrap:",best_model.best_model.best_estimator.get_params()["bootstrap"])
-print("n_estimators:",best_model.best_estimator_.get_params()["n_estimators"])
-print("max_depth:",best_model.best_estimator_.get_params()["max_depth"])
-print("max_features:",best_model.best_estimator_.get_params()["max_features"])
-print("min_samples_leaf:",best_model.best_estimator_.get_params()["min_samples_leaf"])
+# print("n_estimators:",best_model.best_estimator_.get_params()["n_estimators"])
+# print("max_depth:",best_model.best_estimator_.get_params()["max_depth"])
+# print("max_features:",best_model.best_estimator_.get_params()["max_features"])
+# print("min_samples_leaf:",best_model.best_estimator_.get_params()["min_samples_leaf"])
 
-print(best_model.get_params())
+# print(best_model.get_params())
 
 cnf_matrix = metrics.confusion_matrix(y_val, y_pred)
 TP,FN,FP,TN = cnf_matrix[0,0],cnf_matrix[0,1],cnf_matrix[1,0],cnf_matrix[1,1]

@@ -1,3 +1,4 @@
+# Author: Derek Wang
 # All the pokemon files are 215 by 215 pixels
 # The digimon images are of varying sizes
 # It will be consistent all the images are resized into 215 by 215 pixels
@@ -7,7 +8,7 @@ from resizeimage import resizeimage
 import os
 
 def resize_img(img_dir,save_dir,width,height):
-
+    # Resize the image to the given width and height
     fd_img = open(img_dir,'r+b')
     img = Image.open(fd_img)
     img = resizeimage.resize_contain(img, [width, height])
@@ -15,7 +16,11 @@ def resize_img(img_dir,save_dir,width,height):
     fd_img.close()
 
 def main():
-    
+    """
+    Inputs
+    img_path: the directory containing the PNG images
+    output_path: the directoty that will contain the resized PNG images
+    """
     width = 40
     height = 40
 

@@ -40,7 +40,7 @@ for i in range(len(digi_filenames)):
     file_name = digi_filenames[i]
     image = Image.open(digi_path+"\\"+file_name).convert("RGB")
     data = np.asarray(image).flatten()
-    X[i,:] = data
+    X[i+len(poke_filenames),:] = data
 
 print("Images successfully uploaded!")
 
