@@ -47,36 +47,6 @@ def filter_digi_imgs(path):
 
     print("Images filtered successfully!")
 
-def filter_imgs(path,poke_digi):
-
-    print("Filtering " + poke_digi + " images ...")
-
-    names = os.listdir(path)
-    not_relevant = []
-
-    # Finds irrelevant files
-    for file_name in names:
-        if poke_digi == "Digi":
-            # Filter Digimon images - if they contain "mon" in their names
-            if "mon" not in file_name:
-                not_relevant += [file_name]
-
-        elif poke_digi == "Poke":
-            # Filter Pokemon images - they are labelled in numerical order
-            check = file_name[:-4]
-            try:
-                int(check)
-            except ValueError:
-                not_relevant += [file_name]
-
-    # Delete these files
-    for file_name in not_relevant:
-        full_path = path + "\\" + file_name
-        os.remove(full_path)
-
-    print(poke_digi + " images filtered successfully!")
-
-
 def main():
     poke_path = "C:\\Users\\derek\\Desktop\\Coding stuff\\Projects\\pokemon_digimon\\image_data\\pokemon_images"
     filter_poke_imgs(poke_path)
