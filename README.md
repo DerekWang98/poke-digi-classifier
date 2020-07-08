@@ -14,7 +14,7 @@ It ended up having an accuracy of 0.8 and an AUC of 0.878 on the validation set.
 ```
 AUC close to 1 is good and it's bad when it's around 0.5.I then performed a grid search and found that the large datasets take significantly more time so I made the images smaller into 40 x 40 pixels. The grid search returned values of penalty = 'l2' and C= 0.0020235896477251557.
 ```shell
-This result in an accuracy of 0.8 and AUC of 0.877 which did not really improve on the model.
+This gave an accuracy of 0.8 and AUC of 0.877 which did not really improve on the model.
 ```
 
 # What I've learnt and future steps?
