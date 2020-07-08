@@ -21,3 +21,5 @@ This gave an accuracy of 0.8 and AUC of 0.877 which did not really improve on th
 This was great because it helped me familiarise myself with machine learning packages such as scikitlearn and also how to deal with image data.
 
 Logistic regression worked better than I thought but I wanna be the best, Like no one ever was. I'll have to try more complex models than this to improve the prediction.
+
+The value of refactoring code!! (Add more about this later)
