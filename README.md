@@ -29,8 +29,8 @@ Accuracy: 0.96
 Recall: 0.94
 Precision 0.98
 AUC: 0.99
-This is an amazing result!! But can we do better?
 ```
+This is an amazing result!! But can we do better?
 ### Logistic Regression with hyperparameters:
 ```shell
 Hyperparameters: [Best penalty: l1 and Best C: 0.0020235896477251557]
@@ -38,18 +38,16 @@ Accuracy: 0.991044776119403
 Recall: 1.0
 Precision 0.9794520547945206
 AUC: 1.0
-The model could be overfitted. 10-fold or k-fold cross validation will need to be performed with these parameters to check.
 ```
-
+The model could be overfitted. 10-fold or k-fold cross validation will need to be performed with these parameters to check.
 ### Random Forest:
 ```shell
 Accuracy: 0.9791044776119403
 Recall: 0.958041958041958
 Precision 0.9927536231884058
 AUC: 0.995465472027972
-Random forest gave slightly better results than logistic regression which is expected. 
 ```
-
+Random forest gave slightly better results than logistic regression which is expected.
 ### Random Forest with hyperparameters:
 ```shell
 Hyperparameters: [bootstrap: True, n_estimators: 100, max_depth: 10, max_features: auto, min_samples_leaf: 10]
@@ -57,8 +55,8 @@ Accuracy: 1.0
 Recall: 1.0
 Precision 1.0
 AUC: 1.0
-The model could be overfitted. 10-fold or k-fold cross validation will need to be performed with these parameters to check.
 ```
+The model could be overfitted. 10-fold or k-fold cross validation will need to be performed with these parameters to check.
 
 ### Logistic Regression:
 # What I've learnt and future steps?
